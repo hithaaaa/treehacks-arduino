@@ -1,0 +1,29 @@
+<div>
+<h3>Motion sensors</h3>
+<table>
+
+<% data.forEach(function(record){  %>
+  <tr>
+    <th>Device Id: <%= record.deviceId %> </th>
+    <th>Device Name: <%= record.deviceName %> </th>
+    <th><button class='displayDeviceProperties' id="<%= record.deviceId %>">Click</button></th>
+    
+  </tr>
+  
+<% }) %>
+</table>
+
+
+</div>
+<div class="container content-area">
+      <div class="row">
+        <div class="col-lg-6 GPSPanel" >
+        </div>    
+
+        <div class="col-lg-6 area2" >
+          
+        </div>    
+        </div>
+      </div>  
+
+

@@ -1,0 +1,57 @@
+
+
+.main {margin-top: 70px; padding-left: 50px; padding-right: 50px;}
+.row {padding: 10px;}
+
+.mm-content-header{
+	background-color: #566D7E;
+	height: 100px;
+	text-align: vertical;
+}
+
+
+	/*--------menu-icons-----------*/	
+
+.menu-icons ul {list-style: none; margin-left: 0;margin-bottom: 0;display: inline-block;margin-left: -30px;}
+.menu-icons li {display: inline-block; margin-bottom: 0;}
+.menu-icons .item {
+			text-align: left;margin:10px;
+			width: 100px; height:50px; background: #434B7E;
+
+		}
+
+
+.module-icons-list li.module-item{
+
+	color: #212F3D;	
+
+	font-family: 'Leelawadee';
+    
+    text-decoration: none;
+    
+   
+    font-size: 24px;
+   color: white;
+	height:40px;
+	margin: 5px;
+	cursor: pointer;
+	background-color: #434B7E;	
+	
+}
+
+.module-item.btn{
+	
+	height:55px; min-width: 100px;
+	box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, .6),  inset 0px -2px 1px 1px rgba(204,198,197,.5);
+	text-align: center;
+	vertical-align: center;
+
+}
+.module-item.btn.selected{
+	background-color: #1F618D;
+	color: white;
+}
+
+.GPSPanel {
+	background-color: blueviolet;
+}

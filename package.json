@@ -1,0 +1,36 @@
+{
+  "name": "my-iot-package",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@arduino/arduino-iot-client": "^1.4.2",
+    "agenda": "^0.6.21",
+    "async": "^1.5.0",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.5.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.0",
+    "cors": "^2.8.5",
+    "crypt": "0.0.2",
+    "ejs": "^2.3.4",
+    "errorhandler": "^1.1.1",
+    "express": "^4.13.3",
+    "express-session": "^1.12.1",
+    "jade": "^1.5.0",
+    "jquery": "^3.6.3",
+    "markerjs": "^1.8.2",
+    "markerjs2": "^2.27.0",
+    "method-override": "^2.1.2",
+    "mongodb": "^1.4.40",
+    "mongoose": "^6.9.1",
+    "path": "^0.12.7",
+    "prerender-node": "^2.2.0",
+    "request": "^2.67.0",
+    "request-promise": "^4.2.6",
+    "serve-favicon": "^2.0.1",
+    "sitemap": "^1.6.0"
+  }
+}

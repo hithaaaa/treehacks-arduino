@@ -1,0 +1,51 @@
+
+<link type="text/css" href="js/libs/bootstrap/css/bootstrap.css">
+
+<link href="css/iot.css" rel="stylesheet" type="text/css">
+
+
+<div class="container content-area">
+    <div class="row">
+      <div class="col-md-6 GPSPanel" >
+        <h3>Motion sensors</h3>
+        <table>
+
+        <% data.forEach(function(record){  %>
+        <% if (record.deviceName == "Motion-senser") { %>
+          <tr>
+            <th>Device Id: <%= record.deviceId %> </th>
+            <th>Device Name: <%= record.deviceName %> </th>
+            <th><button class='displayMSPanel' id="<%= record.deviceId %>">Click</button></th>
+          </tr>
+          
+        <% } %>
+        <% }) %>
+        </table>
+
+        <h3>GPS</h3>
+
+        <table>
+
+
+        <% data.forEach(function(record){  %>
+        <% if (record.deviceName == "GPS") { %>
+          <tr>
+            <th>Device Id: <%= record.deviceId %> </th>
+            <th>Device Name: <%= record.deviceName %> </th>
+            <th><button class='displayGPSPanel' id="<%= record.deviceId %>">Click</button></th>
+          </tr>
+          
+        <% } %>
+        <% }) %>
+
+        </table>
+      </div>
+
+      <div class="col-md-6 GPSPanel; style = justify-content: flex-end" >
+      </div>    
+
+        
+      </div>
+    </div>  
+
+

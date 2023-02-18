@@ -1,0 +1,12 @@
+<table>
+
+<% data.forEach(function(record){  %>
+  <tr>
+    <th><button class='deleteGivenDevice' id="<%= record.user_id %>">Delete</button></th>
+    <th>Device Id: <%= record.user_id %> </th>
+    <th>Device Name: <%= record.name %> </th>
+    
+  </tr>
+  
+<% }) %>
+</table>
