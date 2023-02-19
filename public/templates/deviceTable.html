@@ -3,24 +3,23 @@
 
 <link href="css/iot.css" rel="stylesheet" type="text/css">
 
-
-<div class="container content-area">
-    <div class="row">
-      <div class="col-md-6 GPSPanel" >
+    <div class="float-container">
+      <div class="float-child">
         <h3>Motion sensors</h3>
         <table>
 
         <% data.forEach(function(record){  %>
-        <% if (record.deviceName == "Motion-senser") { %>
+        <% if (record.type == "Motion-senser") { %>
           <tr>
-            <th>Device Id: <%= record.deviceId %> </th>
-            <th>Device Name: <%= record.deviceName %> </th>
-            <th><button class='displayMSPanel' id="<%= record.deviceId %>">Click</button></th>
+            <th>Device Id: <%= record.user_id %> </th>
+            <th>Device Name: <%= record.name %> </th>
+            <th><button class='displayMSPanel' id="<%= record.user_id %>">Click</button></th>
           </tr>
           
         <% } %>
         <% }) %>
         </table>
+
 
         <h3>GPS</h3>
 
@@ -28,11 +27,25 @@
 
 
         <% data.forEach(function(record){  %>
-        <% if (record.deviceName == "GPS") { %>
+        <% if (record.type == "GPS") { %>
           <tr>
-            <th>Device Id: <%= record.deviceId %> </th>
-            <th>Device Name: <%= record.deviceName %> </th>
-            <th><button class='displayGPSPanel' id="<%= record.deviceId %>">Click</button></th>
+            <th>Device Id: <%= record.user_id %> </th>
+            <th>Device Name: <%= record.name %> </th>
+            <th><button class='displayGPSPanel' id="<%= record.user_id %>">Click</button></th>
+          </tr>
+          
+        <% } %>
+        <% }) %>
+        </table>
+
+        <h3>Phones</h3>
+        <table>
+        <% data.forEach(function(record){  %>
+        <% if (record.type == "phone") { %>
+          <tr>
+            <th>Device Id: <%= record.user_id %> </th>
+            <th>Device Name: <%= record.name %> </th>
+            <th><button class='displayGPSPanel' id="<%= record.user_id %>">Click</button></th>
           </tr>
           
         <% } %>
@@ -41,11 +54,11 @@
         </table>
       </div>
 
-      <div class="col-md-6 GPSPanel; style = justify-content: flex-end" >
+      <div class="float-child" >
+        <div class="GPSPanel"></div>
       </div>    
 
         
-      </div>
-    </div>  
+</div>
 
 

@@ -9,7 +9,9 @@ const deviceRouter = require('./routes/device-router');
 const db = require('./db/conn');
 
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors())
+app.use(cors({
+  origin: 'localhost:3000'
+}));
 app.use(bodyParser.json())
 
 app.set('views', path.join(__dirname, 'views'));

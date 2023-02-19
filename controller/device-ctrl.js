@@ -6,7 +6,7 @@ const {Device1} = require('../models/device-model');
 const {Device2} = require('../models/device-model');
 
 createDevice = (req, res) => {
-	var req_body = req.body;
+	var req_body = req.query;
 	
 
 	const device = new Device({
@@ -37,7 +37,7 @@ createDevice = (req, res) => {
 }
 
 deleteDevice = (req, res) => {
-	var req_body = req.body;
+	var response = req.query;
 	//delete device in iot cloud
 
 	// const deviceTrigger = new Device({
@@ -109,7 +109,7 @@ async function getDevices (req, res) {
 	//   //'xOrganization': xOrganization_example // {String} 
 	// };
 	api.devicesV2List().then(devices => {
-        console.log("Success reading devices from iot")
+        console.log("Success reading all devices from iot")
         res.send(devices)
     }), error => {
 	  console.error(error);
@@ -176,7 +176,7 @@ async function getEvent (req, res) {
 		// };
 		
 		api.devicesV2GetEvents(id).then(data => {
-		  res.send('API called for getEvent: ' + JSON.stringify(data));
+		  res.send(data);
 		}), error => {
 		  console.error(error);
 		};
@@ -192,12 +192,12 @@ async function getProperties (req, res) {
 	oauth2.accessToken = returnedToken
 
 	var api = new ArduinoIotClient.DevicesV2Api(defaultClient);
-	console.log("body "+JSON.stringify(req.body)); 
-	if (req.body.device_id == 1) {
+	console.log("body "+JSON.stringify(req.device_id)); 
+	if (req.query.device_id == 1) {
 		console.log("Will print all devices events")
 	} else {
-		var id = req.body.device_id; // {String} The id of the device
-		console.log("requested ID is " + id)
+		var id = req.query.device_id; // {String} The id of the device
+		console.log("requested ID is " + JSON.stringify(req.query.device_id))
 		// var opts = {
 		// 'showDeleted': true, // {Boolean} If true, shows the soft deleted properties
 		//   'xOrganization': xOrganization_example // {String}  
@@ -205,7 +205,7 @@ async function getProperties (req, res) {
 		
 		api.devicesV2GetProperties(id).then(data => {
 
-		  res.send('API called for properties: ' + JSON.stringify(data));
+		  res.send(data);
 		}), error => {
 		  console.error(error);
 		};
@@ -223,10 +223,10 @@ async function propertiesShow (req, res) {
 	oauth2.accessToken = returnedToken
 
 	var api = new ArduinoIotClient.PropertiesV2Api(defaultClient);
-	var id = req.body.device_id;
-	var pid = '366b6047-96c8-489b-8585-5e05f268662f'; // id of gps
+	var id = req.query.device_id;	
+	var pid = req.query.pid; // id of gps
 	
-	if (req.body.device_id == 1) {
+	if (req.query.device_id == 1) {
 		console.log("Will print all devices events")
 	} else {
 		 // {String} The id of the device
@@ -248,7 +248,7 @@ async function propertiesShow (req, res) {
 			            console.log("Error in propertiesShow()")
 			        })
 			networkAPI();
-		  res.send('API called for propertiesShow: ' + JSON.stringify(data));
+		  res.send(data);
 
 		}), error => {
 		  console.error(error);

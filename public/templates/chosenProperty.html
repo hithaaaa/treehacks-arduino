@@ -2,17 +2,17 @@
 <table>
 
 <% data.forEach(function(record){  %>
+<p>Hey</p>+
   <tr>
     <th>Device Name: <%= record.name %> </th>
     <th>Device Type: <%= record.type %> </th>
-    <th><button class="displayDeviceForProperties" id="<%= record.id %>" >Click</button></th>
-    <!-- should be deviceId-->
+    <th><button class='displayDeviceProperties' id="<%= record.user_id %>">Click</button></th>
     
   </tr>
   
 <% }) %>
 </table>
-
+<h1>Hi</h1>
 
 </div>
 <div class="container content-area">
@@ -20,7 +20,8 @@
         <div class="col-lg-6 PropertiesPanel" >
         </div>    
 
-        <div class="col-lg-6 area2" > 
+        <div class="col-lg-6 area2" >
+          
         </div>    
         </div>
       </div>  

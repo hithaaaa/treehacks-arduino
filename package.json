@@ -10,7 +10,7 @@
     "agenda": "^0.6.21",
     "async": "^1.5.0",
     "bcrypt-nodejs": "0.0.3",
-    "body-parser": "^1.5.2",
+    "body-parser": "^1.20.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.0",
     "cors": "^2.8.5",

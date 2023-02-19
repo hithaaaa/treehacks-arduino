@@ -1,7 +1,7 @@
 
 
-define(['text!templates/index.html','text!templates/deviceTable.html','text!templates/deviceMap.html', 'text!templates/deviceDeleteList.html', 'text!templates/gpsPanel.html', 'text!templates/deviceProperties.html' ], 
-			function(indexTemplate,deviceTableTemplate,deviceMapTemplate,deviceDeleteTemplate,gpsPanelTemplate,devicePropertiesTemplate) {
+define(['text!templates/index.html','text!templates/deviceTable.html','text!templates/deviceMap.html', 'text!templates/deviceDeleteList.html', 'text!templates/gpsPanel.html', 'text!templates/deviceProperties.html', 'text!templates/chosenProperty.html' ], 
+			function(indexTemplate,deviceTableTemplate,deviceMapTemplate,deviceDeleteTemplate,gpsPanelTemplate,devicePropertiesTemplate,chosenPropertyTemplate) {
 
 	
 	//utility to render html pages, control ui workflow and to use data model in ui side
@@ -18,7 +18,7 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
       		'click .displayGPSPanel' : 'displayGPSPanel',
       		'click .displayMSPanel' : 'displayMSPanel',
       		'click .displayPropPanel' : 'displayPropertyPanel',
-      		'click .displayDeviceProperties' : 'displayDeviceProperties'
+      		'click .displayDeviceForProperties' : 'displayDeviceProperties' //each button
 		},
 
     	initialize: function() {
@@ -36,8 +36,33 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 
 
 		},
-		displayDeviceProperties: function(e, id) {
-			//do stuff
+		displayDeviceProperties: function(event) { 
+			var url = 'http://localhost:3000/api/device/properties'; //api call to get list of properties like [{name:acceleormeter..},{name:gps..}]
+		    
+		     var _thisIndex = this; //id is of user
+		     console.log((event.target).id);
+			$.get(url, {device_id: (event.target).id}, function(data) { //get this data and pass each property to function eachproperty
+
+					console.log('list of props data..' + JSON.stringify(data));
+					data.properties.forEach(function(record) {
+						_thisIndex.eachProperty(record.id, (event.target).id);
+						console.log("ID is "+record.id)
+					});
+			  });
+		},
+		eachProperty : function(pid, id) { //take property id and pass to api that returns property details
+			var url = 'api/device/propertiesShow';
+		    
+		     var _thisIndex = this; 
+		     var arrayOfPropData = [];
+			$.get(url, {'device_id': id, 'pid':pid}, function(data) { //pass each property and add to array
+
+					console.log('list of props data..' + JSON.stringify(data));
+					arrayOfPropData.push(data[0]);
+
+			  });
+			console.log("props"+arrayOfPropData)
+			_thisIndex.$('.PropertiesPanel').html(_.template(chosenPropertyTemplate, {data :arrayOfPropData}));
 		},
 		myDevicesClicked: function(e){
 			// var data = [{'deviceId':"1234", 'deviceName' : 'GPS'},
@@ -53,21 +78,28 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 		     var _thisIndex = this;
 			$.get(url, function(data) {
 							 console.log('devices data..' + JSON.stringify(data));
-					     _thisIndex.displayDevices(data);
+					     _thisIndex.$('.area1').html(_.template(deviceTableTemplate,{data :data}));
 
 			  });
 
 			
 		},
-		
 		displayDevices: function(devices){
 			
 			if(devices)
-				this.$('.area1').html(_.template(deviceTableTemplate,{data :devices}));
+				this.$('.area1').html(_.template(devicePropertiesTemplate, {data :devices}));
 		},
 
 		displayGPSPanel: function(e, id) {
-			//call api
+			var url = 'http://localhost:3000/api/device/propertiesShow';
+		    
+		     var _thisIndex = this;
+			$.get(url, {'pid':'366b6047-96c8-489b-8585-5e05f268662f', 'device_id': id}, function(data) {
+							 console.log('LOCALTION data..' + JSON.stringify(data));
+					     _thisIndex.$('.area1').html(_.template(deviceTableTemplate,{data :data}));
+
+			  });
+
 			var deviceData ={"device_id": "1001", "lat":-25, "long":131.0 };
 
 			this.$('.GPSPanel').html(_.template(deviceMapTemplate,{data :deviceData}));
@@ -75,17 +107,17 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 		},
 		
 		devicePropertiesClicked: function(e) {
-			var data = [{'deviceId':"1234", 'deviceName' : 'GPS'},
-		     {'deviceId':"1235", 'deviceName' : 'Motion-senser'},
-		     {'deviceId':"1236", 'deviceName' : 'GPS'},
-		     {'deviceId':"1237", 'deviceName' : 'Motion-senser'}];
-
-		    // var propertyData = [{'deviceId':"1234", 'properties' : {"Lat":"123","long":122}},
-		    //  {'deviceId':"1235", 'properties' : {"Last touched" : "09-08-2019"},
-		    //  {'deviceId':"1236", , 'properties' : {"Lat":"123","long":122}},
-		    //  {'deviceId':"1237", 'properties' : {"Last touched" : "09-08-2019"}]
-
-			this.$('.area1').html(_.template(devicePropertiesTemplate,{data : data}));
+			
+			var url = 'http://localhost:3000/api/getDevices';
+		    
+		     var _thisIndex = this;
+			$.get(url, function(data) {
+				//each device, call property api
+					_thisIndex.displayDevices(data);
+					     
+			  });
+			//idk do
+			
 		},
 
 
