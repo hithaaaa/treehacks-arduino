@@ -1,5 +1,5 @@
 
-
+const cron = require('node-cron');
 var ArduinoIotClient = require('@arduino/arduino-iot-client');
 
 const {Device1} = require('../models/device-model');
@@ -89,8 +89,6 @@ deleteDevice = (req, res) => {
 
 async function getDevices (req, res) { 
 
-	
-
 	var returnedToken = await getApiToken();
 	//var returnedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2FwaTIuYXJkdWluby5jYy9pb3QiLCJhenAiOiJZVkN2SDljUHN3T0h0RU02OEo3NFo5QlI0SVE2eEF3cSIsImV4cCI6MTY3NjcyMjE3MCwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiaHR0cDovL2FyZHVpbm8uY2MvY2xpZW50X2lkIjoiSGl0aGEtY2xvdWQiLCJodHRwOi8vYXJkdWluby5jYy9pZCI6ImEzMGNkNzMzLThkYWUtNGQ4Ni1iOTk2LTE4M2QxNTE1N2EzMSIsImh0dHA6Ly9hcmR1aW5vLmNjL3JhdGVsaW1pdCI6MSwiaHR0cDovL2FyZHVpbm8uY2MvdXNlcm5hbWUiOiJyYW11a3VyYSIsImlhdCI6MTY3NjcyMTg3MCwic3ViIjoiWVZDdkg5Y1Bzd09IdEVNNjhKNzRaOUJSNElRNnhBd3FAY2xpZW50cyJ9.VtXT89NeVnMnThC19EelWCZqcgLVjbOVUWmMIE90p8c";
 	//console.log("THE API TOKEN " + returnedToken)
@@ -109,14 +107,34 @@ async function getDevices (req, res) {
 	//   //'xOrganization': xOrganization_example // {String} 
 	// };
 	api.devicesV2List().then(devices => {
-        console.log("Success reading all devices from iot")
+        console.log("Success reading all devices from iot");
+
         res.send(devices)
+        var conn =  req.param('conn',"")
+        cron.schedule('* * * * *', function() {
+			saveDevice2(devices);
+        });
+		
     }), error => {
 	  console.error(error);
 	};
-
+	
+		 
 	
 
+}
+function saveDevice2(devices) {
+	const device = new Device2({
+		deviceType: devices.type,
+		deviceId: devices.device_id	,
+		events: devices.events
+	});
+		device
+	        .save({ suppressWarning: true })
+	        .catch(error => {
+	            console.log("Error in propertiesShow()")
+	        })
+	     console.log("GetDevice saved!")
 }
 
 // getDevicesFromCloud = () {
@@ -214,7 +232,11 @@ async function getProperties (req, res) {
 
 //function retrieves each property like gps, acc etc
 //here, gps id is hardcoded
+
+
+
 async function propertiesShow (req, res) {
+
 	var returnedToken = await getApiToken();
 	var defaultClient = ArduinoIotClient.ApiClient.instance;
 
@@ -223,17 +245,12 @@ async function propertiesShow (req, res) {
 	oauth2.accessToken = returnedToken
 
 	var api = new ArduinoIotClient.PropertiesV2Api(defaultClient);
-	var id = req.query.device_id;	
-	var pid = req.query.pid; // id of gps
-	
+	var id = req.param('device_id',"");	
+	var pid = req.param('pid',""); // id of gps
+	console.log("In the server recognized pid as "+pid+ " and id as "+id)
 	if (req.query.device_id == 1) {
 		console.log("Will print all devices events")
 	} else {
-		 // {String} The id of the device
-		console.log("requested ID is " + id)
-		// var opts = {
-		//'showDeleted': true // {Boolean} If true, shows the soft deleted properties  
-		// };
 		
 		api.propertiesV2Show(id, pid).then(data => {
 			const device2 = new Device2({
@@ -247,14 +264,15 @@ async function propertiesShow (req, res) {
 			        .catch(error => {
 			            console.log("Error in propertiesShow()")
 			        })
-			networkAPI();
+			//networkAPI();
+			console.log(JSON.stringify(data))
 		  res.send(data);
-
 		}), error => {
 		  console.error(error);
 		};
 	}
 }
+
 
 //function retrieves location data and decides to adjust bandwidth (QoS) by invoking 5g NEF API
 //APIs are 3gpp standard based
@@ -289,7 +307,7 @@ async function getApiToken() {
     };
 	try {
 	    const response = await rp(options);
-	    console.log("Access token: " + response['access_token']);
+	    
 	    return response['access_token'];
 	}
 	catch (error) {

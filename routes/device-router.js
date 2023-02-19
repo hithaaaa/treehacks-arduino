@@ -13,5 +13,5 @@ router.get('/getDevices', DeviceCtrl.getDevices)
 router.get('/device/showDevice', DeviceCtrl.showDevice)
 router.get('/device/event', DeviceCtrl.getEvent)
 router.get('/device/properties', DeviceCtrl.getProperties)
-router.get('/device/propertiesShow', DeviceCtrl.propertiesShow)
+router.get('/propShow', DeviceCtrl.propertiesShow)
 module.exports = router;

@@ -1,20 +1,15 @@
-<div>
+
 <table>
 
-<% data.forEach(function(record){  %>
-<p>Hey</p>+
+<% data.forEach(function(record){ %>
   <tr>
-    <th>Device Name: <%= record.name %> </th>
-    <th>Device Type: <%= record.type %> </th>
-    <th><button class='displayDeviceProperties' id="<%= record.user_id %>">Click</button></th>
+    <th>Property: <%= data.name %> </th>
+    <br />
+    <th>Last Value: <%= data.last_value %> </th>
     
   </tr>
-  
-<% }) %>
+  <% }) %>
 </table>
-<h1>Hi</h1>
-
-</div>
 <div class="container content-area">
       <div class="row">
         <div class="col-lg-6 PropertiesPanel" >

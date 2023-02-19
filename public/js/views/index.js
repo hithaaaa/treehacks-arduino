@@ -36,33 +36,38 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 
 
 		},
+
+		displayFinalProperites: function(myArray){
+			this.$('.PropertiesPanel').html(_.template(chosenPropertyTemplate, {data : myArray}));
+		},
 		displayDeviceProperties: function(event) { 
-			var url = 'http://localhost:3000/api/device/properties'; //api call to get list of properties like [{name:acceleormeter..},{name:gps..}]
+			var url = './api/device/properties'; //api call to get list of properties like [{name:acceleormeter..},{name:gps..}]
 		    
 		     var _thisIndex = this; //id is of user
-		     console.log((event.target).id);
-			$.get(url, {device_id: (event.target).id}, function(data) { //get this data and pass each property to function eachproperty
+		     
+			$.get(url, {device_id: $(event.target).context.id}, function(data) { //get this data and pass each property to function eachproperty
 
-					console.log('list of props data..' + JSON.stringify(data));
 					data.properties.forEach(function(record) {
-						_thisIndex.eachProperty(record.id, (event.target).id);
-						console.log("ID is "+record.id)
+						_thisIndex.eachProperty(record.id, $(event.target).context.id)
 					});
 			  });
+			
 		},
-		eachProperty : function(pid, id) { //take property id and pass to api that returns property details
-			var url = 'api/device/propertiesShow';
+		eachProperty : function(pid1, id) { //take property id and pass to api that returns property details
+
+			var temp = []
+		     this.temp = []
+			var url = '/api/propShow';
 		    
 		     var _thisIndex = this; 
-		     var arrayOfPropData = [];
-			$.get(url, {'device_id': id, 'pid':pid}, function(data) { //pass each property and add to array
-
-					console.log('list of props data..' + JSON.stringify(data));
-					arrayOfPropData.push(data[0]);
+			$.get(url,  { device_id : id,  pid: pid1}, function(data) { //pass each property and add to array
+					//console.log(JSON.stringify(data))
+					_thisIndex.temp.push({"Name: ":data.name, "Last value: ": data.last_value});
+					
 
 			  });
-			console.log("props"+arrayOfPropData)
-			_thisIndex.$('.PropertiesPanel').html(_.template(chosenPropertyTemplate, {data :arrayOfPropData}));
+			console.log(JSON.stringify(this.temp));
+			_thisIndex.displayFinalProperites(this.temp)
 		},
 		myDevicesClicked: function(e){
 			// var data = [{'deviceId':"1234", 'deviceName' : 'GPS'},
@@ -73,13 +78,19 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 			// _thisIndex.displayDevices(data);
 
 
-   			var url = 'http://localhost:3000/api/getDevices';
-		    
+   			var url = './api/getDevices';
 		     var _thisIndex = this;
-			$.get(url, function(data) {
-							 console.log('devices data..' + JSON.stringify(data));
-					     _thisIndex.$('.area1').html(_.template(deviceTableTemplate,{data :data}));
 
+
+			$.get(url, {"conn":true}, function(data) {
+							//console.log('devices data..' + JSON.stringify(data));
+					     _thisIndex.$('.area1').html(_.template(deviceTableTemplate,{data :data}));
+					data.forEach(function(record) {
+						if (record.events[1].value == "CONNECTED") {
+							console.log(record.name + " is connected")
+
+						}
+					}) 
 			  });
 
 			
@@ -90,31 +101,31 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 				this.$('.area1').html(_.template(devicePropertiesTemplate, {data :devices}));
 		},
 
-		displayGPSPanel: function(e, id) {
-			var url = 'http://localhost:3000/api/device/propertiesShow';
+		displayGPSPanel: function(e) { //displaying map based on lat and long 
+			var url = './api/propShow'; //making call to properties api
 		    
-		     var _thisIndex = this;
-			$.get(url, {'pid':'366b6047-96c8-489b-8585-5e05f268662f', 'device_id': id}, function(data) {
-							 console.log('LOCALTION data..' + JSON.stringify(data));
-					     _thisIndex.$('.area1').html(_.template(deviceTableTemplate,{data :data}));
-
+		     var _thisIndex = this; //pid is property id - hardcoded
+			var id = (e.target).id;
+			//b6047-96c8-489b-8585-5e05f268662f
+			$.get(url, {device_id: id, pid: "69c637d8-ecbd-4d51-aa18-ddf803667924"}, function(data) {
+							 console.log('LOCALTION data..' + JSON.stringify(data.last_value.lat)+" and "+JSON.stringify(data.last_value.lon));
+							 
+					     _thisIndex.$('.GPSPanel').html(_.template(deviceMapTemplate,{data :data.last_value}));
+		
 			  });
 
-			var deviceData ={"device_id": "1001", "lat":-25, "long":131.0 };
-
-			this.$('.GPSPanel').html(_.template(deviceMapTemplate,{data :deviceData}));
-		
+			
 		},
 		
 		devicePropertiesClicked: function(e) {
 			
-			var url = 'http://localhost:3000/api/getDevices';
+			var url = './api/getDevices';
 		    
 		     var _thisIndex = this;
 			$.get(url, function(data) {
 				//each device, call property api
 					_thisIndex.displayDevices(data);
-					     
+					
 			  });
 			//idk do
 			
@@ -127,7 +138,7 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 
 
 	  deleteDeviceClicked: function(event) {
-	  		var url = 'http://localhost:3000/api/getDevices';
+	  		var url = './api/getDevices';
 	  		_thisIndex = this;	 // 'this' is the class object by default, but looses scope inside another function, hence asssigned to another
 	  		      	  
 
@@ -143,7 +154,7 @@ define(['text!templates/index.html','text!templates/deviceTable.html','text!temp
 	  }, 
 
 	  	  deleteGivenDevice: function(event) {
-	  	  		var url = 'http://localhost:3000/api/deleteDevice';
+	  	  		var url = '/api/deleteDevice';
 	  	  		_thisIndex = this;	 // 'this' is the class object by default, but looses scope inside another function, hence asssigned to another
 	  	  		      	  
 
